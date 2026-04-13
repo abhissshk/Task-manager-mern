@@ -4,4 +4,4 @@ export const notify = (message, type) => {
   toast[type](message);
 };
 
-export const API_URL = "http://localhost:8000";
+export const API_URL = "https://task-manager-mern-2ryr.onrender.com/task";
