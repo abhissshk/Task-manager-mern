@@ -56,10 +56,12 @@ function Taskmanager() {
 
   const fetchAllTasks = async () => {
     try {
-      const { data } = await GetAllTask();
+      const response = await GetAllTask();
 
-      setTasks(data);
-      setCopyTasks(data);
+const data = response?.data || []; 
+
+setTasks(data);
+setCopyTasks(data);
     } catch (err) {
       console.error(err);
       notify("failed to create task", "error");
