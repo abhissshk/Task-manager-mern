@@ -4,4 +4,4 @@ export const notify = (message, type) => {
   toast[type](message);
 };
 
-export const API_URL = "https://task-manager-mern-2ryr.onrender.com/task";
+export const API_URL = "https://task-manager-mern-2ryr.onrender.com";
