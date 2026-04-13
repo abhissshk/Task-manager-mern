@@ -15,6 +15,7 @@ function Taskmanager() {
   const [tasks, setTasks] = useState([]);
   const [copyTasks, setCopyTasks] = useState([]);
   const [updateTask, setUpateTask] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleTask = () => {
     if (updateTask && input) {
@@ -55,18 +56,22 @@ function Taskmanager() {
   };
 
   const fetchAllTasks = async () => {
-    try {
-      const response = await GetAllTask();
+  try {
+    setLoading(true);
 
-const data = response?.data || []; 
+    const response = await GetAllTask();
+    const data = response?.data || [];
 
-setTasks(data);
-setCopyTasks(data);
-    } catch (err) {
-      console.error(err);
-      notify("failed to create task", "error");
-    }
-  };
+    setTasks(data);
+    setCopyTasks(data);
+
+  } catch (err) {
+    console.error(err);
+    notify("failed to fetch tasks", "error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchAllTasks();
@@ -181,50 +186,39 @@ setCopyTasks(data);
       {/* list of items */}
 
       <div className="d-flex flex-column w-100">
-        {tasks?.length === 0 && (
-          <p className="text-center mt-3">No tasks found</p>
-        )}
 
-        {tasks?.map((item) => {
-          return (
-            <div
-              key={item._id}
-              className="m-2 p-2 border bg-light w-100 rounded-3 d-flex justify-content-between align-items-center"
-            >
-              <span
-                className={item.isDone ? "text-decoration-line-through" : ""}
-              >
-                {item.taskName}
-              </span>
+  {loading && (
+    <p className="text-center mt-3">Loading...</p>
+  )}
 
-              <div>
-                <button
-                  onClick={() => handleCheckAndUncheck(item)}
-                  className="btn btn-success btn-sm me-2"
-                >
-                  <FaCheck />
-                </button>
+  {!loading && tasks?.length === 0 && (
+    <p className="text-center mt-3">No tasks found</p>
+  )}
 
-                <button
-                  onClick={() => setUpateTask(item)}
-                  className="btn btn-primary btn-sm me-2"
-                >
-                  <FaPencilAlt />
-                </button>
+  {!loading && tasks?.map((item) => (
+    <div key={item._id} className="m-2 p-2 border bg-light w-100 rounded-3 d-flex justify-content-between align-items-center">
+      
+      <span className={item.isDone ? "text-decoration-line-through" : ""}>
+        {item.taskName}
+      </span>
 
-                <button
-                  onClick={() => {
-                    handleDeleteTask(item._id);
-                  }}
-                  className="btn btn-danger btn-sm me-2"
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            </div>
-          );
-        })}
+      <div>
+        <button onClick={() => handleCheckAndUncheck(item)} className="btn btn-success btn-sm me-2">
+          <FaCheck />
+        </button>
+
+        <button onClick={() => setUpateTask(item)} className="btn btn-primary btn-sm me-2">
+          <FaPencilAlt />
+        </button>
+
+        <button onClick={() => handleDeleteTask(item._id)} className="btn btn-danger btn-sm me-2">
+          <FaTrash />
+        </button>
       </div>
+    </div>
+  ))}
+
+</div>
 
       {/* toastify */}
       <ToastContainer
