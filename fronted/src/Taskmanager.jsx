@@ -161,8 +161,8 @@ setCopyTasks(data);
             placeholder="Add a new task"
           />
           <button onClick={handleTask} className="btn btn-success btn-sm me-2">
-            <FaPlus className="m-2" />
-          </button>
+  {updateTask ? <FaPencilAlt /> : <FaPlus />}
+</button>
         </div>
 
         <div className="input-group flex-grow-1">
@@ -181,11 +181,11 @@ setCopyTasks(data);
       {/* list of items */}
 
       <div className="d-flex flex-column w-100">
-        {tasks.length === 0 && (
+        {tasks?.length === 0 && (
           <p className="text-center mt-3">No tasks found</p>
         )}
 
-        {tasks.map((item) => {
+        {tasks?.map((item) => {
           return (
             <div
               key={item._id}
